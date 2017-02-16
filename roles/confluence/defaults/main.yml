@@ -1,0 +1,6 @@
+---
+# defaults file for confluence
+
+confluence_version: 6.0.5
+confluence_jvm_minimum_memory: 1024m
+confluence_jvm_maximum_memory: 1024m

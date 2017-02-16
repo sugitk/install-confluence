@@ -1,0 +1,19 @@
+---
+# PostgreSQL settings
+service: postgresql
+postgresql_port: 5432
+
+dbname: confluence
+dbuser: confluenceuser
+dbpass: Longlongl0ngC0mpl3xPassw0rd!
+
+# nginx settings
+nginx_http_port: 80
+nginx_https_port: 443
+server_hostname: confluence
+server_domainname: example.com
+
+# Oracle JDK settings
+oracle_java_home: /usr/java/jdk1.8.0_121
+oracle_java_rpm_file: jdk-8u121-linux-x64.rpm
+oracle_java_rpm_url: "http://download.oracle.com/otn-pub/java/jdk/8u121-b13/e9e7ea248e2c4826b92b3f075a80e441/{{ oracle_java_rpm_file }}"

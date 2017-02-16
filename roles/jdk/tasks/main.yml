@@ -1,0 +1,23 @@
+---
+- name: download Java RPM
+  become: yes
+  get_url:
+    url: "{{ oracle_java_rpm_url }}"
+    headers: 'Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie'
+    dest: /tmp/{{ oracle_java_rpm_file }}
+
+- name: install RPM
+  action: yum name=/tmp/{{ oracle_java_rpm_file }} state=present
+  become: yes
+
+- name: set Java version as default
+  alternatives:
+    name="{{ item.exe }}"
+    link="/usr/bin/{{ item.exe }}"
+    path="{{ item.path }}/{{ item.exe }}"
+  with_items:
+    - { path: "{{ oracle_java_home }}/jre/bin", exe: 'java' }
+    - { path: "{{ oracle_java_home }}/jre/bin", exe: 'keytool' }
+    - { path: "{{ oracle_java_home }}/bin", exe: 'javac' }
+    - { path: "{{ oracle_java_home }}/bin", exe: 'javadoc' }
+  become: yes

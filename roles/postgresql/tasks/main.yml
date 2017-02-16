@@ -1,0 +1,47 @@
+---
+- name: install postgresql
+  yum: name={{ item }} state=latest
+  with_items:
+    - postgresql-server
+    - postgresql-devel
+    - postgresql-contrib
+    - postgresql-jdbc
+    - python-psycopg2
+
+- name: postgresql initdb
+  shell: service postgresql initdb
+  ignore_errors: yes
+  args:
+    warn: no
+
+- name: start postgresql
+  service: name=postgresql state=started enabled=yes
+
+- name: install pg_hba.conf
+  template: src=pg_hba.conf.j2 dest=/var/lib/pgsql/data/pg_hba.conf owner=postgres group=postgres mode=0400 backup=yes
+  notify: restart postgresql
+
+- name: install postgresql.conf
+  template: src=postgresql.conf.j2 dest=/var/lib/pgsql/data/postgresql.conf owner=postgres group=postgres mode=0400 backup=yes
+  notify: restart postgresql
+
+- name : create database
+  become: yes
+  become_user: postgres
+  become_method: sudo
+  postgresql_db:
+    name: "{{ dbname }}"
+    encoding: "UTF-8"
+    login_user: postgres
+
+- name: create user
+  become: yes
+  become_user: postgres
+  become_method: sudo
+  postgresql_user:
+    db: "{{ dbname }}"
+    name: "{{ dbuser }}"
+    password: "{{ dbpass }}"
+    priv: ALL
+    state: present
+    login_user: postgres

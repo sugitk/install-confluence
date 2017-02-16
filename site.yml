@@ -1,0 +1,11 @@
+---
+- name: Install Confluence
+  hosts: confluence
+  remote_user: root
+
+  roles:
+    - common
+    - jdk
+    - postgresql
+    - nginx
+    - confluence
